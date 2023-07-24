@@ -1,0 +1,176 @@
+# Default values for ironic.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+global:
+  enable_tls: false
+
+  # DNS domain that all services will either be members of
+  dnsDomain: suse.baremetal
+
+  # Global ingress annotations that is shared by all the ingress services.
+  # For example, use it to override extern-dns records.
+  ingress:
+    annotations: {}
+      # The IP to register with external-dns for this service
+      #external-dns.alpha.kubernetes.io/target: 192.168.20.5
+
+  nodeSelector: {}
+
+image:
+  repository: registry.opensuse.org/isv/metal3/bci/ironic/containerfile/suse/ironic
+  pullPolicy: IfNotPresent
+  tag: 21.1.1
+
+nameOverride: ""
+fullnameOverride: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+service:
+  - type: httpd 
+    port: 6180
+  - type: api
+    port: 6385
+  - type: inspector
+    port: 5050  
+  - type: NodePort 
+
+ingress:
+  enabled: true 
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: "api.ironic.{{ .Values.global.dnsDomain }}"
+      paths:
+        - path: /
+          pathType: Prefix 
+          portname: api
+    - host: "inspector.ironic.{{ .Values.global.dnsDomain }}"
+      paths:
+        - path: /
+          pathType: Prefix
+          portname: inspector
+    - host: "boot.ironic.{{ .Values.global.dnsDomain }}"
+      paths:
+        - path: /
+          pathType: Prefix
+          portname: httpd
+    - host: "cache.ironic.{{ .Values.global.dnsDomain }}"
+      paths:
+        - path: /
+          pathType: Prefix
+          portname: httpd
+
+  # self,letsEncrypt,secrets       
+  tlsSource: self 
+  tls:   
+    - secretName: ironic-cacert 
+      hosts:
+        - api.ironic.{{ .Values.global.dnsDomain }}
+        - boot.ironic.{{ .Values.global.dnsDomain }}
+        - cache.ironic.{{ .Values.global.dnsDomain }}
+        - inspector.ironic.{{ .Values.global.dnsDomain }}
+  
+
+letsEncrypt:
+  # email: none@example.com
+  environment: staging 
+
+#
+# tls
+#   Where to offload the TLS/SSL encryption
+# - ingress (default)
+# - ironic 
+tls: ingress
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+tolerations: []
+
+affinity: {}
+
+certVolumeMounts:
+  - mountPath: /certs/ironic/tls.crt
+    name: ironic-certs
+    subPath: tls.crt
+  - mountPath: /certs/ironic/tls.key
+    name: ironic-certs
+    subPath: tls.key
+  - mountPath: /certs/ironic-inspector/tls.crt
+    name: ironic-insp-certs
+    subPath: tls.crt
+  - mountPath: /certs/ironic-inspector/tls.key
+    name: ironic-insp-certs
+    subPath: tls.key
+  - mountPath: /certs/ca/ironic/tls.crt
+    name: ironic-cacerts
+    subPath: tls.crt
+  - mountPath: /certs/ca/ironic-inspector/tls.crt
+    name: ironic-insp-cacerts
+    subPath: tls.crt
+
+secretVolMounts:
+  - name: ironic-certs
+    mountPath: "/certs/ironic"
+    readOnly: true
+  - name: ironic-insp-certs
+    mountPath: "/certs/ironic-inspector"
+    readOnly: true
+  - name: vmedia-certs
+    mountPath: "/certs/vmedia"
+    readOnly: true
+  - name: vmedia-ca-certs
+    mountPath: "/certs/ca/vmedia"
+    readOnly: true  
+
+cacertVolumeMounts:
+  - mountPath: /etc/pki/trust/anchors/ca.crt
+    name: ironic-trustca
+    subPath: tls.cacert
+  - mountPath: /shared/html/tstcerts/ca.crt
+    name: ironicipa-trustca
+    subPath: tls.cacert
+
+trustVolMounts:
+  - name: ironic-trustcerts
+    mountPath: "/etc/pki/trust/anchors"
+    readOnly: true
+  - name: ironicipa-trustcerts
+    mountPath: "/shared/html/tstcerts"
+    readOnly: true
+
+letsEncryptVolMounts:
+  - mountPath: /etc/pki/trust/anchors/ca.crt
+    name: ironic-le-trustca
+    subPath: tls.lecacert
+  - mountPath: /shared/html/tstcerts/ca.crt
+    name: ironicipa-le-trustca
+    subPath: tls.lecacert
+
+ironic:
+  - servname: ironic
+    command: /bin/runironic
+    execCommand:    
+      - /bin/sh
+      - -c
+      - curl -sSf http://127.0.0.1:6385 || curl -sSfk https://127.0.0.1:6385
+    ports:
+      - containerPort: 6385
+        name: api
+        protocol: TCP

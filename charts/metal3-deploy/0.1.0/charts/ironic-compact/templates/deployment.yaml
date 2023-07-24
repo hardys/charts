@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "ironic.fullname" . }}
+  labels:
+    {{- include "ironic.labels" . | nindent 4 }}
+spec:
+  minReadySeconds: 10      
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "ironic.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: Recreate    
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "ironic.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: ironic
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .securityContext | nindent 12 }}
+          command:
+            - "/bin/runironic"
+          env:
+          - name: IRONIC_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+
+          ports:
+          - containerPort: 6385
+      {{- with .Values.global.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.dnsPolicy }}
+      dnsPolicy:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.global.dnsConfig }}
+      dnsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
