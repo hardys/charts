@@ -1,4 +1,3 @@
-{{- if .Values.global.enable_ironic -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -15,4 +14,3 @@ spec:
   {{- end }}
   selector:
     {{- include "ironic.selectorLabels" . | nindent 4 }}
-{{- end -}}

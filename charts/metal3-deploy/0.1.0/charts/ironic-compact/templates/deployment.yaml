@@ -21,10 +21,19 @@ spec:
       labels:
         {{- include "ironic.selectorLabels" . | nindent 8 }}
     spec:
+      initContainers:
+        - name: ironic-ipa-downloader
+          image: "{{ .Values.image.ironic-ipa-downloadwer.repository }}:{{ .Values.image.ironic-ipa-downloadwer.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.ironic-ipa-downloadwer.pullPolicy }}
+          command:
+            - "/usr/local/bin/get-resource.sh"
+          volumeMounts:
+            - name: shared
+              mountpath: /shared
       containers:
         - name: ironic
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "{{ .Values.image.ironic.repository }}:{{ .Values.image.ironic.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.ironic.pullPolicy }}
           securityContext:
             {{- toYaml .securityContext | nindent 12 }}
           command:
@@ -34,9 +43,14 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: status.podIP
-
           ports:
           - containerPort: 6385
+          volumeMounts:
+            - name: shared
+              mountpath: /shared
+      volumes:
+      - name: shared
+        emptyDir: {}
       {{- with .Values.global.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
