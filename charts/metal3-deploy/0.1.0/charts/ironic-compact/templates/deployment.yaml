@@ -23,13 +23,13 @@ spec:
     spec:
       initContainers:
         - name: ironic-ipa-downloader
-          image: "{{ .Values.image.ironic-ipa-downloadwer.repository }}:{{ .Values.image.ironic-ipa-downloadwer.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.ironic-ipa-downloadwer.pullPolicy }}
+          image: "{{ .Values.image.ironicIpaDownloader.repository }}:{{ .Values.image.ironicIpaDownloader.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.ironicIpaDownloader.pullPolicy }}
           command:
             - "/usr/local/bin/get-resource.sh"
           volumeMounts:
             - name: shared
-              mountpath: /shared
+              mountPath: "/shared"
       containers:
         - name: ironic
           image: "{{ .Values.image.ironic.repository }}:{{ .Values.image.ironic.tag | default .Chart.AppVersion }}"
@@ -39,15 +39,15 @@ spec:
           command:
             - "/bin/runironic"
           env:
-          - name: IRONIC_IP
-            valueFrom:
-              fieldRef:
-                fieldPath: status.podIP
+            - name: IRONIC_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
           ports:
-          - containerPort: 6385
+            - containerPort: 6385
           volumeMounts:
             - name: shared
-              mountpath: /shared
+              mountPath: "/shared"
       volumes:
       - name: shared
         emptyDir: {}
