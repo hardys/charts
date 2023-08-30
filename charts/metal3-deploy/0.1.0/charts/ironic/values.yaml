@@ -372,6 +372,8 @@ ironic:
       - name: MARIADB_PASSWORD
         secretKeyRefKey: password
         secretKeyRefName: ironic-mariadb    
+      - name: PROVISIONING_IP
+        fieldRefPath: status.hostIP
     image:
       repository: registry.opensuse.org/isv/metal3/bci/ironic/containerfile/suse/ironic
       pullPolicy: IfNotPresent
@@ -396,6 +398,8 @@ ironic:
       - name: MARIADB_PASSWORD
         secretKeyRefKey: password
         secretKeyRefName: ironic-mariadb    
+      - name: PROVISIONING_IP
+        fieldRefPath: status.hostIP
     envFrom:
       - configMapRefname: ironic-bmo
     image:

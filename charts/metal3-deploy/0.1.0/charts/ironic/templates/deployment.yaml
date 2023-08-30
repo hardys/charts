@@ -78,10 +78,10 @@ spec:
           {{- end }}
           {{- if .env }}
           env:
-            {{- range .env }}      
+            {{- range .env }}
             - name: {{ .name }}
               valueFrom:
-                {{- if .secretKeyRefKey }}      
+                {{- if .secretKeyRefKey }}
                 secretKeyRef:
                   key: {{ .secretKeyRefKey }}
                   name: {{ .secretKeyRefName }}
@@ -90,9 +90,13 @@ spec:
                 configMapKeyRef:
                   key: {{ .configMapKeyRefKey }}
                   name: {{ .configMapKeyRefName }}
-                {{- end }}   
-            {{- end }}   
-          {{- end }}  
+                {{- end }}
+                {{- if .fieldRefPath }}
+                fieldRef:
+                  fieldPath: {{ .fieldRefPath }}
+                {{- end }}
+            {{- end }}
+          {{- end }}
           {{- if .execCommand }}
           livenessProbe:
             exec:
