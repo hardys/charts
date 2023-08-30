@@ -35,10 +35,12 @@ global:
   dhcpRange: 192.168.20.20,192.168.20.80
 
   # Network interface on which provisioning network can be accessed
-  provisioningInterface: ens4
+  # Leave empty when no provisioning network is enabled
+  provisioningInterface: ""
 
   # IP Address assigned to network interface on provisioning network
-  provisioningIP: 192.168.20.5
+  # Leave empty when no provisioning network is enabled
+  provisioningIP: ""
 
   # Database ClusterIP address
   database_clusterIP: 10.43.255.253
