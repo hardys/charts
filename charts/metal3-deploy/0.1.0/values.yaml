@@ -42,15 +42,15 @@ global:
   enable_metal3_nfs_subdir_external_provisioner_for_mariadb: false
 
   # whether to enable media server.
-  enable_metal3_media_server: true
+  enable_metal3_media_server: false
 
   # whether to enable dnsmasq. If DHCP is already provided by the existing networking
   # infrastructure, it is recommended to set enable_dnsmasq to 'false'.
-  enable_dnsmasq: true
+  enable_dnsmasq: false
 
   # whether to enable PXE boot capability
   # NOTE: enable_dnsmasq must set to 'true' in order for this option to be effective.
-  enable_pxe_boot: true
+  enable_pxe_boot: false
 
   # whether to enable Ironic services besides dnsmasq.
   # NOTE: enable_dnsmasq has precedence over this option. If enable_dnsmasq is set
