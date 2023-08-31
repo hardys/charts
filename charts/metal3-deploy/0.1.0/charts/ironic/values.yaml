@@ -418,6 +418,9 @@ ironic:
     command: /bin/runhttpd
     envFrom:
       - configMapRefname: ironic-bmo
+    env:
+      - name: PROVISIONING_IP
+        fieldRefPath: status.hostIP
     image:
       repository: registry.opensuse.org/isv/metal3/bci/ironic/containerfile/suse/ironic
       pullPolicy: IfNotPresent
