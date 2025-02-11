@@ -1763,6 +1763,18 @@ entries:
     version: 0.1.0+up0.9.1
   rancher-turtles-airgap-resources:
   - apiVersion: v2
+    appVersion: 0.16.0
+    created: "2025-02-11T20:40:24.077582626+02:00"
+    description: Rancher Turtles utility chart for airgap scenarios
+    digest: 91b81974089bc2eb1c29f829e4795456b2e9225181c8f3d568d39f030f4a7e32
+    home: https://github.com/rancher/turtles/
+    icon: https://raw.githubusercontent.com/rancher/turtles/main/logos/capi.svg
+    name: rancher-turtles-airgap-resources
+    type: application
+    urls:
+    - assets/rancher-turtles-airgap-resources/rancher-turtles-airgap-resources-0.6.0.tgz
+    version: 0.6.0
+  - apiVersion: v2
     appVersion: 0.14.1
     created: "2024-12-03T20:03:15.068417455+02:00"
     description: Rancher Turtles utility chart for airgap scenarios
