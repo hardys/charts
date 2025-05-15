@@ -12,7 +12,7 @@
    # features: Optional and experimental features.
    features:
      # day2operations: Alpha feature.
-@@ -123,7 +123,7 @@
+@@ -123,13 +123,13 @@
        # enabled: Turn on or off.
        enabled: true
        # version: RKE2 version.
@@ -21,7 +21,22 @@
        # bootstrap: RKE2 bootstrap provider.
        bootstrap:
          # namespace: Bootstrap namespace.
-@@ -148,3 +148,15 @@
+         namespace: rke2-bootstrap-system
+         # imageUrl: Custom image URL.
+-        imageUrl: ""
++        imageUrl: "registry.opensuse.org/isv/suse/edge/clusterapi/containerfile-sp6/cluster-api-provider-rke2-bootstrap:0.15.1"
+         # fetchConfig: Config fetching settings.
+         fetchConfig:
+           # url: Config fetch URL.
+@@ -141,10 +141,22 @@
+         # namespace: Control plane namespace.
+         namespace: rke2-control-plane-system
+         # imageUrl: Custom image URL.
+-        imageUrl: ""
++        imageUrl: "registry.opensuse.org/isv/suse/edge/clusterapi/containerfile-sp6/cluster-api-provider-rke2-controlplane:0.15.1"
+         # fetchConfig: Config fetching settings.
+         fetchConfig:
+           # url: Config fetch URL.
            url: ""
            # selector: Config selector.
            selector: ""
