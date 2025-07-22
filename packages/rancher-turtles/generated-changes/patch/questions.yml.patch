@@ -5,7 +5,7 @@
          group: "Rancher Turtles Features Settings"
        - variable: rancherTurtles.kubectlImage
 -        default: "registry.k8s.io/kubernetes/kubectl:v1.30.0"
-+        default: "registry.suse.com/edge/3.2/kubectl:1.30.3"
++        default: "registry.suse.com/edge/3.3/kubectl:1.32.4"
          description: "Specify the image to use when running kubectl in jobs."
          type: string
          label: Kubectl Image

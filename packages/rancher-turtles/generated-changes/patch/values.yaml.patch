@@ -8,7 +8,7 @@
 +  rancherInstalled: false
    # kubectlImage: Image for kubectl tasks.
 -  kubectlImage: registry.k8s.io/kubernetes/kubectl:v1.30.0
-+  kubectlImage: registry.suse.com/edge/3.2/kubectl:1.30.3
++  kubectlImage: registry.suse.com/edge/3.3/kubectl:1.32.4
    # features: Optional and experimental features.
    features:
      # day2operations: Alpha feature.
@@ -17,7 +17,7 @@
        enabled: true
        # version: RKE2 version.
 -      version: ""
-+      version: "v0.16.1"
++      version: "v0.18.0"
        # bootstrap: RKE2 bootstrap provider.
        bootstrap:
          # namespace: Bootstrap namespace.
@@ -27,10 +27,10 @@
            selector: ""
 +    metal3:
 +      enabled: true
-+      version: "v1.9.3"
++      version: "v1.9.4"
 +      infrastructure:
 +        namespace: capm3-system
-+        imageUrl: "registry.suse.com/rancher/cluster-api-provider-metal3:v1.9.3"
++        imageUrl: "registry.suse.com/rancher/cluster-api-provider-metal3:v1.9.4"
 +        fetchConfig:
 +          url: ""
 +          selector: ""
