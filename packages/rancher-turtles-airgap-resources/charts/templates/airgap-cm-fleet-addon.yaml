@@ -656,12 +656,8 @@ data:
       - list
       - get
       - watch
-    - apiGroups:
-      - ""
-      resources:
-      - namespaces
-      verbs:
       - create
+      - patch
     - apiGroups:
       - events.k8s.io
       resources:
@@ -817,7 +813,7 @@ data:
             control-plane: controller-manager
         spec:
           containers:
-          - image: ghcr.io/rancher-sandbox/cluster-api-addon-provider-fleet:v0.10.0
+          - image: ghcr.io/rancher-sandbox/cluster-api-addon-provider-fleet:v0.11.0
             imagePullPolicy: IfNotPresent
             name: manager
             ports:
@@ -839,7 +835,7 @@ data:
                 memory: 100Mi
           - args:
             - --helm-install
-            image: ghcr.io/rancher-sandbox/cluster-api-addon-provider-fleet:v0.10.0
+            image: ghcr.io/rancher-sandbox/cluster-api-addon-provider-fleet:v0.11.0
             name: helm-manager
             resources:
               limits:
@@ -891,10 +887,13 @@ data:
       - major: 0
         minor: 10
         contract: v1beta1
+      - major: 0
+        minor: 11
+        contract: v1beta1
 kind: ConfigMap
 metadata:
   creationTimestamp: null
-  name: v0.10.0
+  name: v0.11.0
   namespace: rancher-turtles-system
   labels:
     provider-components: fleet
