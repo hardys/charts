@@ -1,6 +1,6 @@
 --- charts-original/templates/addon-provider-fleet.yaml
 +++ charts/templates/addon-provider-fleet.yaml
-@@ -29,14 +29,12 @@
+@@ -30,14 +30,12 @@
      spec:
        config:
          featureGates:

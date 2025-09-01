@@ -9,19 +9,10 @@
    # kubectlImage: Image for kubectl tasks.
 -  kubectlImage: registry.k8s.io/kubernetes/kubectl:v1.30.0
 +  kubectlImage: registry.suse.com/edge/3.3/kubectl:1.32.4
+   # shellImage: Image for shell tasks.
+   shellImage: rancher/kuberlr-kubectl:v5.0.0
    # features: Optional and experimental features.
-   features:
-     # day2operations: Alpha feature.
-@@ -127,7 +127,7 @@
-       # enabled: Turn on or off.
-       enabled: true
-       # version: RKE2 version.
--      version: ""
-+      version: "v0.18.0"
-       # bootstrap: RKE2 bootstrap provider.
-       bootstrap:
-         # namespace: Bootstrap namespace.
-@@ -152,3 +152,15 @@
+@@ -128,3 +128,15 @@
            url: ""
            # selector: Config selector.
            selector: ""

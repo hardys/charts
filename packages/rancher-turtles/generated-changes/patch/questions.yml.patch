@@ -1,6 +1,6 @@
 --- charts-original/questions.yml
 +++ charts/questions.yml
-@@ -36,7 +36,7 @@
+@@ -31,7 +31,7 @@
          label: Enable Agent TLS Mode
          group: "Rancher Turtles Features Settings"
        - variable: rancherTurtles.kubectlImage
@@ -9,7 +9,7 @@
          description: "Specify the image to use when running kubectl in jobs."
          type: string
          label: Kubectl Image
-@@ -51,4 +51,4 @@
+@@ -46,4 +46,4 @@
          description: "[ALPHA] Enable ETCD Backup and Restore functionality in Rancher Turtles."
          type: boolean
          group: "ETCD Backup and Restore Settings"
