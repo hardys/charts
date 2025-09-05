@@ -813,7 +813,7 @@ data:
             control-plane: controller-manager
         spec:
           containers:
-          - image: ghcr.io/rancher-sandbox/cluster-api-addon-provider-fleet:v0.11.0
+          - image: ghcr.io/rancher/cluster-api-addon-provider-fleet:v0.11.0
             imagePullPolicy: IfNotPresent
             name: manager
             ports:
@@ -835,7 +835,7 @@ data:
                 memory: 100Mi
           - args:
             - --helm-install
-            image: ghcr.io/rancher-sandbox/cluster-api-addon-provider-fleet:v0.11.0
+            image: ghcr.io/rancher/cluster-api-addon-provider-fleet:v0.11.0
             name: helm-manager
             resources:
               limits:
