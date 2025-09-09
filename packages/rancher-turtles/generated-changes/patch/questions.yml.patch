@@ -1,18 +1,11 @@
 --- charts-original/questions.yml
 +++ charts/questions.yml
-@@ -31,7 +31,7 @@
-         label: Enable Agent TLS Mode
+@@ -37,7 +37,7 @@
+         label: Remove cert-manager
          group: "Rancher Turtles Features Settings"
        - variable: rancherTurtles.kubectlImage
--        default: "registry.k8s.io/kubernetes/kubectl:v1.30.0"
+-        default: "registry.k8s.io/kubernetes/kubectl:v1.31.4"
 +        default: "registry.suse.com/edge/3.3/kubectl:1.32.4"
          description: "Specify the image to use when running kubectl in jobs."
          type: string
          label: Kubectl Image
-@@ -46,4 +46,4 @@
-         description: "[ALPHA] Enable ETCD Backup and Restore functionality in Rancher Turtles."
-         type: boolean
-         group: "ETCD Backup and Restore Settings"
--        show_if: "rancherTurtles.features.day2operations.enabled"
-\ No newline at end of file
-+        show_if: "rancherTurtles.features.day2operations.enabled"
