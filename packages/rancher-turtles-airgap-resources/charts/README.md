@@ -23,6 +23,9 @@ cluster-api-operator:
       infrastructure:
         fetchConfig:
           selector: "{\"matchLabels\": {\"provider-components\": \"metal3\"}}"
+      ipam:
+        fetchConfig:
+          selector: "{\"matchLabels\": {\"provider-components\": \"metal3ipam\"}}"
     fleet:
       addon:
         fetchConfig:

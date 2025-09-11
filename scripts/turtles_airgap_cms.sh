@@ -4,9 +4,10 @@ set -eux
 # Script to generate the ConfigMap resources described in 
 # https://turtles.docs.rancher.com/getting-started/air-gapped-environment
 
-CAPI_CORE_VERSION="${CAPI_CORE_VERSION:-"1.9.5"}"
-CAPI_CAPM3_VERSION="${CAPI_CAPM3_VERSION:-"1.9.4"}"
-CAPI_RKE2_VERSION="${CAPI_RKE2_VERSION:-"0.19.0"}"
+CAPI_CORE_VERSION="${CAPI_CORE_VERSION:-"1.10.5"}"
+CAPI_CAPM3_VERSION="${CAPI_CAPM3_VERSION:-"1.10.2"}"
+CAPI_METAL3_IPAM_VERSION="${CAPI_METAL3_IPAM_VERSION:-"1.10.2"}"
+CAPI_RKE2_VERSION="${CAPI_RKE2_VERSION:-"0.20.1"}"
 CAPI_FLEET_VERSION="${CAPI_FLEET_VERSION:-"0.11.0"}"
 
 SCRIPTDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -55,6 +56,23 @@ metadata:
 ---
 EOF
 cat ${CAPI_TMPDIR}/airgap-cm-metal3.yaml >> ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-metal3.yaml
+
+# ipam-components (ipam-metal3ipam)
+curl -L https://github.com/rancher-sandbox/ip-address-manager/releases/download/v${CAPI_METAL3_IPAM_VERSION}/ipam-components.yaml -o ${CAPI_TMPDIR}/metal3-ipam-components.yaml
+curl -L https://github.com/rancher-sandbox/ip-address-manager/releases/download/v${CAPI_METAL3_IPAM_VERSION}/metadata.yaml -o ${CAPI_TMPDIR}/metal3-ipam-metadata.yaml
+kubectl create configmap v${CAPI_METAL3_IPAM_VERSION} --namespace=metal3-ipam-system --from-file=components=${CAPI_TMPDIR}/metal3-ipam-components.yaml --from-file=metadata=${CAPI_TMPDIR}/metal3-ipam-metadata.yaml --dry-run=client -o yaml > ${CAPI_TMPDIR}/airgap-cm-metal3-ipam.yaml
+yq eval -i '.metadata.labels += {"provider-components": "metal3ipam"}' ${CAPI_TMPDIR}/airgap-cm-metal3-ipam.yaml
+cat > ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-metal3-ipam.yaml <<EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    cluster.x-k8s.io/provider: ipam-metal3ipam
+    pod-security.kubernetes.io/enforce: restricted
+  name: metal3-ipam-system
+---
+EOF
+cat ${CAPI_TMPDIR}/airgap-cm-metal3-ipam.yaml >> ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-metal3-ipam.yaml
 
 # boostrap-components (boostrap-rke2)
 curl -L https://github.com/rancher/cluster-api-provider-rke2/releases/download/v${CAPI_RKE2_VERSION}/bootstrap-components.yaml -o ${CAPI_TMPDIR}/rke2-bootstrap-components.yaml
