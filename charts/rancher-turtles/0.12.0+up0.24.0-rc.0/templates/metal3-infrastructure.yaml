@@ -1,0 +1,113 @@
+{{- if and (index .Values "cluster-api-operator" "cluster-api" "enabled") (index .Values "cluster-api-operator" "cluster-api" "metal3" "enabled") }}
+{{- $namespace := index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "namespace" }}
+{{- $ipamnamespace := index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "namespace" }}
+{{- if not (lookup "v1" "Namespace" "" $namespace) }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    "helm.sh/hook": "post-install, post-upgrade"
+    "helm.sh/hook-weight": "1"
+  name: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "namespace" }}
+{{- end }}
+{{- if not (lookup "v1" "Namespace" "" $ipamnamespace) }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    "helm.sh/hook": "post-install, post-upgrade"
+    "helm.sh/hook-weight": "1"
+  name: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "namespace" }}
+{{- end }}
+---
+apiVersion: turtles-capi.cattle.io/v1alpha1
+kind: ClusterctlConfig
+metadata:
+  name: clusterctl-config
+  namespace: rancher-turtles-system
+  annotations:
+    "helm.sh/hook": "post-install, post-upgrade"
+    "helm.sh/hook-weight": "1"
+spec:
+  providers:
+  - name: metal3
+    url: "https://github.com/rancher-sandbox/cluster-api-provider-metal3/releases/v1.10.2/infrastructure-components.yaml"
+    type: InfrastructureProvider
+  - name: metal3ipam
+    url: "https://github.com/rancher-sandbox/ip-address-manager/releases/v1.10.2/ipam-components.yaml"
+    type: IPAMProvider
+---
+apiVersion: turtles-capi.cattle.io/v1alpha1
+kind: CAPIProvider
+metadata:
+  name: metal3
+  namespace: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "namespace" }}
+  annotations:
+    "helm.sh/hook": "post-install, post-upgrade"
+    "helm.sh/hook-weight": "2"
+spec:
+  name: metal3
+  type: infrastructure
+{{- if index .Values  "cluster-api-operator" "cluster-api" "metal3" "version" }}
+  version: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "version" }}
+{{- end }}
+  configSecret:
+{{- if index .Values "cluster-api-operator" "cluster-api" "configSecret" "name" }}
+    name: {{ index .Values "cluster-api-operator" "cluster-api" "configSecret" "name" }}
+{{ else }}
+    name: {{ index .Values "cluster-api-operator" "cluster-api" "configSecret" "defaultName" }}
+{{- end }}
+{{- if or (index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "fetchConfig" "url") (index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "fetchConfig" "selector") }}
+  fetchConfig:
+    {{- if index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "fetchConfig" "url" }}
+    url: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "fetchConfig" "url" }}
+    {{- end }}
+    {{- if index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "fetchConfig" "selector" }}
+    selector: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "fetchConfig" "selector" }}
+    {{- end }}
+{{- end }}
+{{- if index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "imageUrl" }}
+  deployment:
+    containers:
+      - name: manager
+        imageUrl: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "infrastructure" "imageUrl" }}
+{{- end }}
+---
+apiVersion: turtles-capi.cattle.io/v1alpha1
+kind: CAPIProvider
+metadata:
+  name: metal3ipam
+  namespace: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "namespace" }}
+  annotations:
+    "helm.sh/hook": "post-install, post-upgrade"
+    "helm.sh/hook-weight": "2"
+spec:
+  name: metal3ipam
+  type: ipam
+{{- if index .Values  "cluster-api-operator" "cluster-api" "metal3" "ipam" "version" }}
+  version: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "version" }}
+{{- end }}
+  configSecret:
+{{- if index .Values "cluster-api-operator" "cluster-api" "configSecret" "name" }}
+    name: {{ index .Values "cluster-api-operator" "cluster-api" "configSecret" "name" }}
+{{ else }}
+    name: {{ index .Values "cluster-api-operator" "cluster-api" "configSecret" "defaultName" }}
+{{- end }}
+{{- if or (index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "fetchConfig" "url") (index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "fetchConfig" "selector") }}
+  fetchConfig:
+    {{- if index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "fetchConfig" "url" }}
+    url: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "fetchConfig" "url" }}
+    {{- end }}
+    {{- if index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "fetchConfig" "selector" }}
+    selector: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "fetchConfig" "selector" }}
+    {{- end }}
+{{- end }}
+{{- if index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "imageUrl" }}
+  deployment:
+    containers:
+      - name: manager
+        imageUrl: {{ index .Values "cluster-api-operator" "cluster-api" "metal3" "ipam" "imageUrl" }}
+{{- end }}
+{{- end }}
