@@ -1,3 +1,4 @@
+{{- if not (lookup "v1" "Namespace" "" "capm3-system") }}
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -6,6 +7,7 @@ metadata:
     pod-security.kubernetes.io/enforce: restricted
   name: capm3-system
 ---
+{{- end }}
 apiVersion: v1
 data:
   components: |

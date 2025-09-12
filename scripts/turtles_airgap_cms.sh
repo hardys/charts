@@ -29,6 +29,7 @@ kubectl create configmap v${CAPI_CORE_VERSION} --namespace=capi-system --from-fi
 yq eval -i '.metadata.annotations += {"provider.cluster.x-k8s.io/compressed": "true"}'  ${CAPI_TMPDIR}/airgap-cm-core.yaml
 yq eval -i '.metadata.labels += {"provider-components": "core"}' ${CAPI_TMPDIR}/airgap-cm-core.yaml
 cat > ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-core.yaml <<EOF
+{{- if not (lookup "v1" "Namespace" "" "capi-system") }}
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -37,6 +38,7 @@ metadata:
     control-plane: controller-manager
   name: capi-system
 ---
+{{- end }}
 EOF
 cat ${CAPI_TMPDIR}/airgap-cm-core.yaml >> ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-core.yaml
 
@@ -46,6 +48,7 @@ curl -L https://github.com/rancher-sandbox/cluster-api-provider-metal3/releases/
 kubectl create configmap v${CAPI_CAPM3_VERSION} --namespace=capm3-system --from-file=components=${CAPI_TMPDIR}/metal3-components.yaml --from-file=metadata=${CAPI_TMPDIR}/metal3-metadata.yaml --dry-run=client -o yaml > ${CAPI_TMPDIR}/airgap-cm-metal3.yaml
 yq eval -i '.metadata.labels += {"provider-components": "metal3"}' ${CAPI_TMPDIR}/airgap-cm-metal3.yaml
 cat > ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-metal3.yaml <<EOF
+{{- if not (lookup "v1" "Namespace" "" "capm3-system") }}
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -54,6 +57,7 @@ metadata:
     pod-security.kubernetes.io/enforce: restricted
   name: capm3-system
 ---
+{{- end }}
 EOF
 cat ${CAPI_TMPDIR}/airgap-cm-metal3.yaml >> ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-metal3.yaml
 
@@ -63,6 +67,7 @@ curl -L https://github.com/rancher-sandbox/ip-address-manager/releases/download/
 kubectl create configmap v${CAPI_METAL3_IPAM_VERSION} --namespace=metal3-ipam-system --from-file=components=${CAPI_TMPDIR}/metal3-ipam-components.yaml --from-file=metadata=${CAPI_TMPDIR}/metal3-ipam-metadata.yaml --dry-run=client -o yaml > ${CAPI_TMPDIR}/airgap-cm-metal3-ipam.yaml
 yq eval -i '.metadata.labels += {"provider-components": "metal3ipam"}' ${CAPI_TMPDIR}/airgap-cm-metal3-ipam.yaml
 cat > ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-metal3-ipam.yaml <<EOF
+{{- if not (lookup "v1" "Namespace" "" "metal3-ipam-system") }}
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -71,6 +76,7 @@ metadata:
     pod-security.kubernetes.io/enforce: restricted
   name: metal3-ipam-system
 ---
+{{- end }}
 EOF
 cat ${CAPI_TMPDIR}/airgap-cm-metal3-ipam.yaml >> ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-metal3-ipam.yaml
 
@@ -80,6 +86,7 @@ curl -L https://github.com/rancher/cluster-api-provider-rke2/releases/download/v
 kubectl create configmap v${CAPI_RKE2_VERSION} --namespace=rke2-bootstrap-system --from-file=components=${CAPI_TMPDIR}/rke2-bootstrap-components.yaml --from-file=metadata=${CAPI_TMPDIR}/rke2-bootstrap-metadata.yaml --dry-run=client -o yaml > ${CAPI_TMPDIR}/airgap-cm-rke2-bootstrap.yaml
 yq eval -i '.metadata.labels += {"provider-components": "rke2-bootstrap"}' ${CAPI_TMPDIR}/airgap-cm-rke2-bootstrap.yaml
 cat > ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-rke2-bootstrap.yaml <<EOF
+{{- if not (lookup "v1" "Namespace" "" "rke2-bootstrap-system") }}
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -88,6 +95,7 @@ metadata:
     control-plane: controller-manager
   name: rke2-bootstrap-system
 ---
+{{- end }}
 EOF
 cat ${CAPI_TMPDIR}/airgap-cm-rke2-bootstrap.yaml >> ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-rke2-bootstrap.yaml 
 
@@ -97,6 +105,7 @@ curl -L https://github.com/rancher/cluster-api-provider-rke2/releases/download/v
 kubectl create configmap v${CAPI_RKE2_VERSION} --namespace=rke2-control-plane-system --from-file=components=${CAPI_TMPDIR}/rke2-control-plane-components.yaml --from-file=metadata=${CAPI_TMPDIR}/rke2-control-plane-metadata.yaml --dry-run=client -o yaml > ${CAPI_TMPDIR}/airgap-cm-rke2-control-plane.yaml
 yq eval -i '.metadata.labels += {"provider-components": "rke2-control-plane"}' ${CAPI_TMPDIR}/airgap-cm-rke2-control-plane.yaml
 cat > ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-rke2-control-plane.yaml <<EOF
+{{- if not (lookup "v1" "Namespace" "" "rke2-control-plane-system") }}
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -105,6 +114,7 @@ metadata:
     control-plane: controller-manager
   name: rke2-control-plane-system
 ---
+{{- end }}
 EOF
 cat ${CAPI_TMPDIR}/airgap-cm-rke2-control-plane.yaml >> ${SCRIPTDIR}/${PACKAGE_CHARTS_DIR}/airgap-cm-rke2-control-plane.yaml
 
